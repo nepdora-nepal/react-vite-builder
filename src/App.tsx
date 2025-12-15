@@ -5,9 +5,27 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [isClient, setIsClient] = useState(false)
+
+  if (!isClient && typeof window !== 'undefined') {
+    setIsClient(true)
+  }
 
   return (
     <>
+      <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          background: isClient ? '#4caf50' : '#f44336',
+          color: 'white',
+          padding: '0.5rem 1rem',
+          zIndex: 9999,
+          borderRadius: '0 0 10px 0',
+          fontWeight: 'bold'
+      }}>
+        {isClient ? 'Hydrated on Client' : 'Rendered on Server (SSR)'}
+      </div>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
