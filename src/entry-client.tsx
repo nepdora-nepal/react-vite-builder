@@ -6,6 +6,6 @@ import App from './App'
 hydrateRoot(
   document.getElementById('root') as HTMLElement,
   <StrictMode>
-    <App />
+    <App /> 
   </StrictMode>,
 )

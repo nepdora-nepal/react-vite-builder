@@ -67,7 +67,7 @@ if (!isProd) {
             )
 
             const { render } = await import(
-                path.join(serverDist, 'entry-server.js')
+                path.join(serverDist, '/src/entry-server.tsx')
             )
 
             const { html: appHtml } = render(req.originalUrl)
