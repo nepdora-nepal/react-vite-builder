@@ -42,7 +42,7 @@ if (!isProd) {
             const { html: appHtml } = await render(url)
 
             // 5. Inject the app-rendered HTML into the template
-            const html = template.replace('', appHtml)
+            const html = template.replace('<!--app-html-->', appHtml)
 
             // 6. Send the rendered HTML back
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
@@ -75,7 +75,7 @@ if (!isProd) {
             const { html: appHtml } = render(req.originalUrl)
 
             // FIX 2: Replace the empty root div, as the placeholder is removed in the build
-            const html = template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
+            const html = template.replace('<!--app-html-->', appHtml)
 
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
         } catch (e) {
