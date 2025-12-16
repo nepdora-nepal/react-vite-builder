@@ -1,12 +1,11 @@
 import './index.css'
 import { StrictMode } from 'react'
 import { hydrateRoot } from 'react-dom/client'
-import Test from './Test'
+import App from './App'
 
 hydrateRoot(
   document.getElementById('root') as HTMLElement,
   <StrictMode>
-    <Test />
-
+    <App />
   </StrictMode>,
 )
