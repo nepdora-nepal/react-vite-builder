@@ -63,4 +63,32 @@ function App({ initialData }) {
           path="/products"
           element={
             <ProductsPage
-              initialP
+              initialProducts={initialData.products}
+              initialError={initialData.page === "list" ? initialData.error : null}
+            />
+          }
+        />
+        <Route
+          path="/products/:id"
+          element={
+            <ProductPage
+              initialProduct={initialData.page === "detail" ? initialData.product : null}
+              initialError={initialData.page === "detail" ? initialData.error : null}
+            />
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <State
+              title="Page not found."
+              message="Try visiting /products or /products/1"
+            />
+          }
+        />
+      </Routes>
+    </main>
+  );
+}
+
+export default App;
