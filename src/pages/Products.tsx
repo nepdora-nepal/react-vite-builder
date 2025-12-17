@@ -1,30 +1,35 @@
 import { useState, useEffect } from 'react';
 import { fetchProducts } from '../services/api';
+import { useInitialData } from '../context/DataContext';
 import type { Product } from '../types/types';
 import './Products.css';
 
 export default function Products() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialData = useInitialData();
+  const [products, setProducts] = useState<Product[]>(initialData.products?.results || []);
+  const [loading, setLoading] = useState(!initialData.products);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        setLoading(true);
-        const data = await fetchProducts();
-        setProducts(data.results);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load products. Please try again later.');
-        console.error(err);
-      } finally {
-        setLoading(false);
+    // Only fetch if we don't have initial data from SSR
+    if (!initialData.products) {
+      async function loadProducts() {
+        try {
+          setLoading(true);
+          const data = await fetchProducts();
+          setProducts(data.results);
+          setError(null);
+        } catch (err) {
+          setError('Failed to load products. Please try again later.');
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
 
-    loadProducts();
-  }, []);
+      loadProducts();
+    }
+  }, [initialData.products]);
 
   if (loading) {
     return (

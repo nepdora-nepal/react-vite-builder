@@ -2,6 +2,21 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
+import fetch from 'node-fetch'
+
+// API fetching function
+async function fetchProducts() {
+    try {
+        const response = await fetch('https://glow.nepdora.baliyoventures.com/api/product/')
+        if (!response.ok) {
+            throw new Error(`Failed to fetch products: ${response.statusText}`)
+        }
+        return await response.json()
+    } catch (error) {
+        console.error('Error fetching products:', error)
+        return null
+    }
+}
 
 export const app = express()
 
@@ -38,13 +53,24 @@ if (!isProd) {
             // 3. Load the server entry
             const { render } = await vite.ssrLoadModule('/src/entry-server.tsx')
 
-            // 4. Render the app HTML
-            const { html: appHtml } = await render(url)
+            // 4. Fetch data for SSR (only for /products route)
+            const initialData = {}
+            if (url === '/products' || url === '/products/') {
+                const products = await fetchProducts()
+                if (products) {
+                    initialData.products = products
+                }
+            }
 
-            // 5. Inject the app-rendered HTML into the template
-            const html = template.replace('<!--app-html-->', appHtml)
+            // 5. Render the app HTML with initial data
+            const { html: appHtml } = await render(url, initialData)
 
-            // 6. Send the rendered HTML back
+            // 6. Inject the app-rendered HTML and initial data into the template
+            const dataScript = `<script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData).replace(/</g, '\\u003c')};</script>`
+            let html = template.replace('<!--app-html-->', appHtml)
+            html = html.replace('<!--app-head-->', dataScript)
+
+            // 7. Send the rendered HTML back
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
         } catch (e) {
             // If an error is caught, let Vite fix the stack trace
@@ -73,10 +99,22 @@ if (!isProd) {
                 pathToFileURL(path.join(serverDist, 'entry-server.js')).href
             )
 
-            const { html: appHtml } = render(req.originalUrl)
+            // 4. Fetch data for SSR (only for /products route)
+            const initialData = {}
+            if (req.originalUrl === '/products' || req.originalUrl === '/products/') {
+                const products = await fetchProducts()
+                if (products) {
+                    initialData.products = products
+                }
+            }
 
-            // 5. Inject the app-rendered HTML into the template
-            const html = template.replace('<!--app-html-->', appHtml)
+            // 5. Render the app HTML with initial data
+            const { html: appHtml } = render(req.originalUrl, initialData)
+
+            // 6. Inject the app-rendered HTML and initial data into the template
+            const dataScript = `<script>window.__INITIAL_DATA__ = ${JSON.stringify(initialData).replace(/</g, '\\u003c')};</script>`
+            let html = template.replace('<!--app-html-->', appHtml)
+            html = html.replace('<!--app-head-->', dataScript)
 
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
         } catch (e) {

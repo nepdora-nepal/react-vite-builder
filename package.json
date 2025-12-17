@@ -9,10 +9,12 @@
     "build": "pnpm build:client && pnpm build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "preview": "cross-env NODE_ENV=production node startServer.js"
+    "preview": "cross-env NODE_ENV=production node startServer.js",
+    "serve": "node server.js"
   },
   "dependencies": {
     "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.10.1"
