@@ -1,19 +1,27 @@
-import './index.css'
-import { StrictMode } from 'react'
-import { hydrateRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import App from './App'
+import "./index.css";
+import { StrictMode } from "react";
+import { hydrateRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 
-const queryClient = new QueryClient()
+declare global {
+  interface Window {
+    __INITIAL_DATA__?: any;
+  }
+}
+
+const initialData = window.__INITIAL_DATA__ ?? {
+  page: "list",
+  products: [],
+  product: null,
+  error: null,
+};
 
 hydrateRoot(
-  document.getElementById('root') as HTMLElement,
+  document.getElementById("root")!,
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </StrictMode>,
-)
+    <BrowserRouter>
+      <App initialData={initialData} />
+    </BrowserRouter>
+  </StrictMode>
+);
