@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
 import App from "./App";
-import { API_BASE, fetchProduct, fetchProducts } from "./api";
+import { API_BASE, fetchProduct, fetchProducts } from "./services/api";
 
 /**
  * Very small router for SSR that decides what data to fetch based on URL.
