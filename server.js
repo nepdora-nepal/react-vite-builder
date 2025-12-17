@@ -1,7 +1,7 @@
 import express from 'express'
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 export const app = express()
 
@@ -57,7 +57,8 @@ if (!isProd) {
     const clientDist = path.resolve(__dirname, 'dist/client')
     const serverDist = path.resolve(__dirname, 'dist/server')
 
-    app.use(express.static(clientDist))
+    // Serve static assets but NOT index.html (SSR will handle that)
+    app.use(express.static(clientDist, { index: false }))
 
     // Render everything else with SSR
     app.use(async (req, res) => {
@@ -67,14 +68,14 @@ if (!isProd) {
                 'utf-8',
             )
 
-            // FIX 1: Correct path to the built entry-server.js
+            // 3. Load the server entry
             const { render } = await import(
-                path.join(serverDist, 'entry-server.js')
+                pathToFileURL(path.join(serverDist, 'entry-server.js')).href
             )
 
             const { html: appHtml } = render(req.originalUrl)
 
-            // FIX 2: Replace the empty root div, as the placeholder is removed in the build
+            // 5. Inject the app-rendered HTML into the template
             const html = template.replace('<!--app-html-->', appHtml)
 
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
