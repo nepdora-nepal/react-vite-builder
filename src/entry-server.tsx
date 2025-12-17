@@ -51,12 +51,7 @@ export async function render(_url) {
 
   const appHtml = renderToString(
     <StrictMode>
-      <App
-        page={initialData.page}
-        products={initialData.products}
-        product={initialData.product}
-        error={initialData.error}
-      />
+      <App initialData={initialData} />
     </StrictMode>
   );
 
