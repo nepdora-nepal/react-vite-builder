@@ -42,3 +42,4 @@ function App({ initialData = {} }: { initialData?: any }) {
     </main>
   );
 }
+export default App;
