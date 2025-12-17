@@ -1,38 +1,39 @@
 {
-  "name": "react-vite",
+  "name": "test",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node startServer.js",
-    "start": "cross-env NODE_ENV=production node startServer.js",
-    "build": "pnpm build:client && pnpm build:server",
-    "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "preview": "cross-env NODE_ENV=production node startServer.js",
-    "serve": "node server.js"
+    "dev": "node start-server.js",
+    "build:client": "vite build --outDir dist/client --ssrManifest",
+    "build:server": "vite build --outDir dist/server --ssr src/entry-server.jsx",
+    "build": "npm run build:client && npm run build:server",
+    "preview": "cross-env NODE_ENV=production node start-server.js",
+    "lint": "eslint ."
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query": "^5.90.12",
+    "compression": "^1.8.1",
+    "cross-env": "^10.1.0",
     "express": "^5.2.1",
-    "node-fetch": "^3.3.2",
+    "lucide-react": "^0.561.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.10.1"
+    "react-router-dom": "^7.10.1",
+    "serve-static": "^2.2.1",
+    "sirv": "^3.0.2",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@types/express": "^5.0.6",
-    "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
-    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
   }
 }
