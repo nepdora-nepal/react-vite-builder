@@ -64,8 +64,8 @@ export async function render(_url) {
     initialData.page === "detail" && initialData.product?.title
       ? `${initialData.product.title} | Demo Store`
       : initialData.page === "list"
-      ? "Products | Demo Store"
-      : "Page not found | Demo Store";
+        ? "Products | Demo Store"
+        : "Page not found | Demo Store";
 
   const description =
     initialData.page === "detail" && initialData.product?.description
